@@ -31,6 +31,7 @@ Systematically check every changed file for:
 ### ZeppOS patterns
 
 - Navigation data via `params: JSON.stringify({...})`, not `globalData`
+- Storage access uses `getKey(baseKey)` from `utils/storage` if dev-mode key prefixing is used
 - Timer accuracy: `Date.now() - startTime` diff, not accumulated tick counts
 - Widget null check before calling `setProperty`
 - `catch (e)` with unused `e` — should be `catch { }` (optional catch binding, ES2019+)

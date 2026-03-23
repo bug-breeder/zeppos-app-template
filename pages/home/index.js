@@ -13,6 +13,8 @@
 import { CircularLayout, VStack, Text, Button, textColors } from 'zeppos-zui';
 // import { push } from '@zos/router'; // uncomment when you need navigation
 
+// For raw hmUI widgets (non-ZUI), use COLOR / TYPOGRAPHY from '../../utils/constants';
+
 // Module-level state — MUST be reset in onInit (persists across page visits)
 let pageRoot = null;
 

@@ -24,7 +24,7 @@
 import { log as Logger } from '@zos/utils';
 import { LocalStorage } from '@zos/storage';
 import { exit } from '@zos/app-service';
-import { set as setAlarm } from '@zos/alarm';
+// import { set as setAlarm } from '@zos/alarm'; // uncomment for alarm-chain pattern
 
 const logger = Logger.getLogger('app-service');
 const storage = new LocalStorage();
