@@ -40,9 +40,9 @@ import hmUI from '@zos/ui';
 ```js
 import { push, replace, pop } from '@zos/router';
 
-push({ url: 'pages/timer/index', params: JSON.stringify({ key: value }) })
-replace({ url: 'pages/menu/index' })   // no back-stack entry
-pop()                                   // go back
+push({ url: 'pages/timer/index', params: JSON.stringify({ key: value }) });
+replace({ url: 'pages/menu/index' }); // no back-stack entry
+pop(); // go back
 ```
 
 **Always pass data via `params: JSON.stringify({...})`** — not globalData (unreliable across push).
@@ -52,9 +52,9 @@ In target page `onInit(params)`: `const p = JSON.parse(params)` — always guard
 
 ```js
 import { LocalStorage } from '@zos/storage';
-const storage = new LocalStorage();       // must instantiate
-storage.getItem(key, defaultValue)        // returns defaultValue if missing
-storage.setItem(key, value)               // value can be any JSON-serializable type
+const storage = new LocalStorage(); // must instantiate
+storage.getItem(key, defaultValue); // returns defaultValue if missing
+storage.setItem(key, value); // value can be any JSON-serializable type
 ```
 
 Use `utils/storage.js` wrappers (`get`, `set`, `getKey`) in page code.
@@ -68,31 +68,50 @@ import { Time, Vibrator, HeartRate, Battery } from '@zos/sensor';
 // Time
 const t = new Time();
 t.getHours() / t.getMinutes() / t.getSeconds();
-t.onPerMinute(callback);  // called every minute
+t.onPerMinute(callback); // called every minute
 
 // Vibrator — MUST call stop() in onDestroy
 const v = new Vibrator();
-const type = v.getType();  // { URGENT, STRONG_SHORT, PULSE, ... }
-v.start([{ type: type.STRONG_SHORT, duration: 300 }, { type: type.PAUSE, duration: 100 }]);
-v.stop();  // call in onDestroy — vibration continues after page exit otherwise
+const type = v.getType(); // { URGENT, STRONG_SHORT, PULSE, ... }
+v.start([
+  { type: type.STRONG_SHORT, duration: 300 },
+  { type: type.PAUSE, duration: 100 },
+]);
+v.stop(); // call in onDestroy — vibration continues after page exit otherwise
 
 // Battery
 const b = new Battery();
-b.getCurrent();  // percentage 0-100
+b.getCurrent(); // percentage 0-100
 ```
 
 ### Interaction — `@zos/interaction`
 
 ```js
 import {
-  onGesture, offGesture,
-  GESTURE_UP, GESTURE_DOWN, GESTURE_LEFT, GESTURE_RIGHT,
-  onKey, offKey,
-  KEY_HOME, KEY_SELECT, KEY_EVENT_CLICK, KEY_EVENT_LONG_PRESS
+  onGesture,
+  offGesture,
+  GESTURE_UP,
+  GESTURE_DOWN,
+  GESTURE_LEFT,
+  GESTURE_RIGHT,
+  onKey,
+  offKey,
+  KEY_HOME,
+  KEY_SELECT,
+  KEY_EVENT_CLICK,
+  KEY_EVENT_LONG_PRESS,
 } from '@zos/interaction';
 
-onGesture({ callback: (gesture) => { /* handle */; return true; } });  // return true to consume
-onKey({ callback: (key, event) => { /* handle */; return true; } });
+onGesture({
+  callback: (gesture) => {
+    /* handle */ return true;
+  },
+}); // return true to consume
+onKey({
+  callback: (key, event) => {
+    /* handle */ return true;
+  },
+});
 
 // MUST call in onDestroy:
 offGesture();
@@ -104,7 +123,7 @@ offKey();
 ```js
 import { set as setAlarm, cancel as cancelAlarm } from '@zos/alarm';
 
-const id = setAlarm({ url: 'app-service/index', delay: 300 });  // delay in seconds
+const id = setAlarm({ url: 'app-service/index', delay: 300 }); // delay in seconds
 cancelAlarm({ alarmId: id });
 ```
 
@@ -116,7 +135,9 @@ Use for app-service recurrence (alarm chain). `url` = path to service file (no .
 import { exit } from '@zos/app-service';
 
 AppService({
-  onInit(params) { /* single-shot */ },
+  onInit(params) {
+    /* single-shot */
+  },
   onDestroy() {},
 });
 ```
@@ -127,7 +148,7 @@ Call `exit()` to terminate early. Service exits automatically after `onInit` com
 
 ```js
 import { setWakeUpRelaunch } from '@zos/display';
-setWakeUpRelaunch({ relaunch: true });   // keep screen alive / relaunch on wake-up
+setWakeUpRelaunch({ relaunch: true }); // keep screen alive / relaunch on wake-up
 ```
 
 ### Background Service Start — `@zos/bg-service`
@@ -146,16 +167,35 @@ Import components from `'zeppos-zui'`:
 
 ```js
 import {
-  CircularLayout, VStack, HStack, ScrollView, Container,
-  Text, Title, Body, Caption,
-  Button, PrimaryButton, SecondaryButton, DestructiveButton,
-  Switch, Stepper,
-  ListItem, SectionHeader, TitleBar,
-  showToast, dismissToast,
-  showLoading, hideLoading,
-  createState, effect,
-  textColors, systemColors, backgroundColors,
-  fontSizes, theme,
+  CircularLayout,
+  VStack,
+  HStack,
+  ScrollView,
+  Container,
+  Text,
+  Title,
+  Body,
+  Caption,
+  Button,
+  PrimaryButton,
+  SecondaryButton,
+  DestructiveButton,
+  Switch,
+  Stepper,
+  ListItem,
+  SectionHeader,
+  TitleBar,
+  showToast,
+  dismissToast,
+  showLoading,
+  hideLoading,
+  createState,
+  effect,
+  textColors,
+  systemColors,
+  backgroundColors,
+  fontSizes,
+  theme,
 } from 'zeppos-zui';
 ```
 
@@ -191,7 +231,7 @@ new Text({
   text: 'Hello',
   textStyle: 'largeTitle' | 'title' | 'subheadline' | 'body' | 'caption1' | 'caption2',
   fontWeight: 'bold' | 'medium' | 'regular',
-  color: textColors.title,   // or hex number e.g. 0xffffff
+  color: textColors.title, // or hex number e.g. 0xffffff
   align: 'center' | 'left' | 'right',
 });
 ```
@@ -205,8 +245,12 @@ new Button({
   label: 'Confirm',
   variant: 'primary' | 'secondary' | 'destructive' | 'ghost',
   size: 'small' | 'medium' | 'large' | 'capsule' | 'floating',
-  onPress: () => { /* handler */ },
-  onLongPress: () => { /* optional */ },
+  onPress: () => {
+    /* handler */
+  },
+  onLongPress: () => {
+    /* optional */
+  },
   disabled: false,
 });
 ```
@@ -217,7 +261,9 @@ new Button({
 new Switch({
   value: true,
   showLabels: true,
-  onChange: (val) => { console.log('switched:', val); },
+  onChange: (val) => {
+    console.log('switched:', val);
+  },
 });
 ```
 
@@ -226,8 +272,8 @@ new Switch({
 ```js
 new ListItem({
   title: 'Settings',
-  subtitle: 'Configure app options',   // optional
-  accessory: 'chevron' | 'switch' | 'badge',  // optional
+  subtitle: 'Configure app options', // optional
+  accessory: 'chevron' | 'switch' | 'badge', // optional
   onPress: () => {},
 });
 ```
@@ -246,7 +292,13 @@ hideLoading();
 
 ```js
 const state = createState({ count: 0 });
-effect(state, (s) => s.count, (count) => { /* runs on change */ });
+effect(
+  state,
+  (s) => s.count,
+  (count) => {
+    /* runs on change */
+  }
+);
 state.set({ count: state.get().count + 1 });
 ```
 
@@ -258,11 +310,11 @@ state.set({ count: state.get().count + 1 });
 import { CircularLayout, VStack, Text, textColors } from 'zeppos-zui';
 // import { push, pop } from '@zos/router'; // uncomment when you need navigation
 
-let pageRoot = null;  // module-level — reset in onInit
+let pageRoot = null; // module-level — reset in onInit
 
 Page({
   onInit(params) {
-    pageRoot = null;  // reset on every visit
+    pageRoot = null; // reset on every visit
     try {
       const p = params ? JSON.parse(params) : {};
       console.log('[PageName] params:', p);
@@ -277,9 +329,7 @@ Page({
       children: [
         new VStack({
           spacing: 16,
-          children: [
-            new Text({ text: 'Page Title', textStyle: 'title', color: textColors.title }),
-          ],
+          children: [new Text({ text: 'Page Title', textStyle: 'title', color: textColors.title })],
         }),
       ],
     });
@@ -287,7 +337,10 @@ Page({
   },
 
   onDestroy() {
-    if (pageRoot) { pageRoot.destroy(); pageRoot = null; }
+    if (pageRoot) {
+      pageRoot.destroy();
+      pageRoot = null;
+    }
     // offGesture(); offKey(); vibrator.stop(); — if used
   },
 });

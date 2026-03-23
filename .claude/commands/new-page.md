@@ -7,6 +7,7 @@ Follow these steps exactly in order. Do not skip any step.
 ## Step 1: Determine names
 
 From `$ARGUMENTS`, derive:
+
 - **PascalCase name** for use in comments (e.g. `Settings`, `TimerSelect`)
 - **kebab-case path** for the file system (e.g. `settings`, `timer-select`)
 - **File path:** `pages/<kebab-case>/index.js`
@@ -23,12 +24,7 @@ Create `pages/<kebab-case>/index.js` with this exact content (replace `[PageName
  * [PageName] page
  */
 
-import {
-  CircularLayout,
-  VStack,
-  Text,
-  textColors,
-} from 'zeppos-zui';
+import { CircularLayout, VStack, Text, textColors } from 'zeppos-zui';
 // import { push, pop } from '@zos/router'; // uncomment when you need navigation
 
 // Module-level state — MUST be reset in onInit (persists across page visits)
@@ -116,6 +112,7 @@ Run `npm run lint` — expect 0 errors.
 ## Step 5: Confirm
 
 Report back:
+
 - Created file: `pages/<kebab-case>/index.js`
 - Registered in `app.json`: `"pages/<kebab-case>/index"` added to pages array
 - Lint: passes

@@ -58,14 +58,14 @@ assets/
 
 ## Dev Commands
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Build + launch in simulator (watches for changes) |
-| `npm run build` | Build `.zab` installer → `dist/` |
-| `npm run preview` | Build + push to device (scan QR in Zepp app) |
-| `npm run verify` | Lint + format check + build — **run before every commit** |
-| `npm run lint:fix` | Auto-fix lint errors |
-| `npm run format` | Auto-format all files |
+| Command            | What it does                                              |
+| ------------------ | --------------------------------------------------------- |
+| `npm run dev`      | Build + launch in simulator (watches for changes)         |
+| `npm run build`    | Build `.zab` installer → `dist/`                          |
+| `npm run preview`  | Build + push to device (scan QR in Zepp app)              |
+| `npm run verify`   | Lint + format check + build — **run before every commit** |
+| `npm run lint:fix` | Auto-fix lint errors                                      |
+| `npm run format`   | Auto-format all files                                     |
 
 ---
 
@@ -94,9 +94,11 @@ assets/
 3. **Module-level vars persist across page visits** — `let x = 0` at module scope is NOT reset when the user navigates away and returns. Reset ALL state explicitly in `onInit()`.
 
 4. **App-service is single-shot** — `onInit` runs once. For recurring behavior use:
+
    ```js
-   setAlarm({ url: 'app-service/index', delay: 300 }) // from '@zos/alarm'
+   setAlarm({ url: 'app-service/index', delay: 300 }); // from '@zos/alarm'
    ```
+
    `setInterval` is unreliable in services.
 
 5. **Black background is mandatory** — Use `COLOR.BG` (`0x000000`) or ZUI's `backgroundColors.primary` on every page. OLED panels consume zero power for black pixels.
@@ -109,8 +111,8 @@ assets/
 
 ## Slash Commands
 
-| Command | When to use |
-|---|---|
-| `/zeppos [question]` | Full ZeppOS API cheatsheet + ZUI component reference |
-| `/new-page <PageName>` | Scaffold a new page and register it in `app.json` |
-| `/review [PR#]` | ZeppOS-aware automated PR review |
+| Command                | When to use                                          |
+| ---------------------- | ---------------------------------------------------- |
+| `/zeppos [question]`   | Full ZeppOS API cheatsheet + ZUI component reference |
+| `/new-page <PageName>` | Scaffold a new page and register it in `app.json`    |
+| `/review [PR#]`        | ZeppOS-aware automated PR review                     |

@@ -21,6 +21,7 @@ If it fails, report exactly which stage failed and the error message. This is a 
 Systematically check every changed file for:
 
 ### Correctness
+
 - Logic errors, off-by-one, wrong conditionals
 - Module-level `let` vars not reset in `onInit` (they **persist across page revisits** — common silent bug)
 - Timer/interval leaks — is `clearInterval` called in `onDestroy`?
@@ -28,6 +29,7 @@ Systematically check every changed file for:
 - Gesture/key handlers — `offGesture()` / `offKey()` called in `onDestroy`?
 
 ### ZeppOS patterns
+
 - Navigation data via `params: JSON.stringify({...})`, not `globalData`
 - Timer accuracy: `Date.now() - startTime` diff, not accumulated tick counts
 - Widget null check before calling `setProperty`
@@ -36,15 +38,18 @@ Systematically check every changed file for:
 - Storage in app-service: must import `LocalStorage` directly from `@zos/storage` (can't use `utils/`)
 
 ### Code quality
+
 - Unused imports or variables
 - Magic numbers that should be constants in `utils/constants.js`
 - Duplicated logic that should be a shared util
 
 ### Assets
+
 - New images referenced in widgets must exist under `assets/raw/`
 - Image paths in widgets are relative to `assets/raw/` (e.g. `src: 'icons/home.png'`)
 
 ### app.json
+
 - New pages registered under `targets.common.module.page.pages`
 - New services registered under `targets.common.module["app-service"].services`
 - New `@zos/*` APIs that require permissions added to top-level `permissions`
@@ -58,6 +63,7 @@ Systematically check every changed file for:
 **Automated checks:** pass / fail (with details if fail)
 
 **Issues** (if any):
+
 - 🔴 Blocker: [description — file:line]
 - 🟡 Warning: [description — file:line]
 - 🔵 Suggestion: [description — file:line]
