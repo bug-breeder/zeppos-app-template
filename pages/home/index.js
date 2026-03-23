@@ -11,7 +11,7 @@
  */
 
 import { CircularLayout, VStack, Text, Button, textColors } from 'zeppos-zui';
-import { push } from '@zos/router';
+// import { push } from '@zos/router'; // uncomment when you need navigation
 
 // Module-level state — MUST be reset in onInit (persists across page visits)
 let pageRoot = null;

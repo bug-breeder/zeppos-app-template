@@ -12,11 +12,7 @@
     "vender": "TODO: your-name",
     "description": "TODO: Describe your app"
   },
-  "permissions": [
-    "device:os.local_storage",
-    "device:os.alarm",
-    "device:os.bg_service"
-  ],
+  "permissions": ["device:os.local_storage", "device:os.alarm", "device:os.bg_service"],
   "runtime": {
     "apiVersion": {
       "compatible": "3.6",
@@ -28,19 +24,13 @@
     "common": {
       "module": {
         "page": {
-          "pages": [
-            "pages/home/index"
-          ]
+          "pages": ["pages/home/index"]
         },
         "app-service": {
-          "services": [
-            "app-service/index"
-          ]
+          "services": ["app-service/index"]
         }
       },
-      "platforms": [
-        { "st": "r" }
-      ],
+      "platforms": [{ "st": "r" }],
       "designWidth": 480
     }
   },
