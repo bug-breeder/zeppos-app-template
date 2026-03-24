@@ -24,18 +24,13 @@ Create `pages/<kebab-case>/index.js` with this exact content (replace `[PageName
  * [PageName] page
  */
 
-import { CircularLayout, VStack, Text, textColors } from 'zeppos-zui';
+import hmUI from '@zos/ui';
+import { COLOR, TYPOGRAPHY } from '../../utils/constants';
 // import { push, pop } from '@zos/router'; // uncomment when you need navigation
-
-// Module-level state — MUST be reset in onInit (persists across page visits)
-let pageRoot = null;
 
 Page({
   onInit(params) {
-    // Reset module-level state
-    pageRoot = null;
-
-    // Parse navigation params — always guard with try/catch
+    // Reset module-level state here (vars persist across page visits)
     try {
       const p = params ? JSON.parse(params) : {};
       console.log('[[PageName]] onInit params:', JSON.stringify(p));
@@ -47,41 +42,27 @@ Page({
   build() {
     console.log('[[PageName]] build');
 
-    pageRoot = new CircularLayout({
-      safeAreaEnabled: true,
-      centerContent: false,
-      edgeMargin: 8,
-      verticalAlignment: 'center',
-      children: [
-        new VStack({
-          spacing: 16,
-          alignment: 'center',
-          children: [
-            new Text({
-              text: '[PageName]',
-              textStyle: 'title',
-              color: textColors.title,
-              align: 'center',
-            }),
-          ],
-        }),
-      ],
-    });
+    // Black OLED background
+    hmUI.createWidget(hmUI.widget.FILL_RECT, { x: 0, y: 0, w: 480, h: 480, color: COLOR.BG });
 
-    pageRoot.mount();
+    // Page title — centered on 480×480 canvas
+    hmUI.createWidget(hmUI.widget.TEXT, {
+      x: 60,
+      y: 200,
+      w: 360,
+      h: 48,
+      text: '[PageName]',
+      text_size: TYPOGRAPHY.title,
+      color: COLOR.TEXT,
+      align_h: hmUI.align.CENTER_H,
+    });
   },
 
   onDestroy() {
     console.log('[[PageName]] onDestroy');
-
-    if (pageRoot) {
-      pageRoot.destroy();
-      pageRoot = null;
-    }
-
-    // Also clean up if used:
-    //   offGesture() / offKey() — from '@zos/interaction'
-    //   vibrator.stop()         — if Vibrator was started
+    // hmUI widgets destroyed automatically
+    // offGesture() / offKey() — from '@zos/interaction'
+    // vibrator.stop()         — if Vibrator was started
   },
 });
 ```
@@ -105,7 +86,7 @@ Open `app.json`. Find the `targets.common.module.page.pages` array and add the n
 
 ## Step 4: Verify
 
-Run `npm run lint` — expect 0 errors.
+Run `npm run verify` — expect 0 errors (lint + format + zeus build).
 
 ---
 
