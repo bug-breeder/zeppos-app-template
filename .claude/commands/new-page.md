@@ -43,14 +43,20 @@ Page({
     console.log('[[PageName]] build');
 
     // Black OLED background
-    hmUI.createWidget(hmUI.widget.FILL_RECT, { x: 0, y: 0, w: 480, h: 480, color: COLOR.BG });
+    hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 0,
+      w: 480,
+      h: 480,
+      color: COLOR.BG,
+    });
 
     // Page title — centered on 480×480 canvas
     hmUI.createWidget(hmUI.widget.TEXT, {
       x: 60,
       y: 200,
       w: 360,
-      h: 48,
+      h: 48, // h > text_size (36) to avoid clipping
       text: '[PageName]',
       text_size: TYPOGRAPHY.title,
       color: COLOR.TEXT,
@@ -96,4 +102,4 @@ Report back:
 
 - Created file: `pages/<kebab-case>/index.js`
 - Registered in `app.json`: `"pages/<kebab-case>/index"` added to pages array
-- Lint: passes
+- Verify: passes
