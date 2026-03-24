@@ -25,7 +25,7 @@ Create `pages/<kebab-case>/index.js` with this exact content (replace `[PageName
  */
 
 import hmUI from '@zos/ui';
-import { COLOR, TYPOGRAPHY } from '../../utils/constants';
+import { COLOR, DEVICE_WIDTH, TYPOGRAPHY } from '../../utils/constants';
 // import { push, pop } from '@zos/router'; // uncomment when you need navigation
 
 Page({
@@ -46,8 +46,8 @@ Page({
     hmUI.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
       y: 0,
-      w: 480,
-      h: 480,
+      w: DEVICE_WIDTH,
+      h: DEVICE_WIDTH,
       color: COLOR.BG,
     });
 

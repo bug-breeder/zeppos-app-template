@@ -15,7 +15,7 @@
  */
 
 import hmUI from '@zos/ui';
-import { COLOR, TYPOGRAPHY } from '../../utils/constants';
+import { COLOR, DEVICE_WIDTH, TYPOGRAPHY } from '../../utils/constants';
 // import { push } from '@zos/router'; // uncomment when you need navigation
 
 Page({
@@ -36,8 +36,8 @@ Page({
     hmUI.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
       y: 0,
-      w: 480,
-      h: 480,
+      w: DEVICE_WIDTH,
+      h: DEVICE_WIDTH,
       color: COLOR.BG,
     });
 
@@ -74,7 +74,7 @@ Page({
       h: 52,
       radius: 26,
       normal_color: COLOR.SECONDARY,
-      press_color: 0x0051d5,
+      press_color: COLOR.SECONDARY_PRESSED,
       text: 'Get Started',
       text_size: 22,
       color: COLOR.TEXT,

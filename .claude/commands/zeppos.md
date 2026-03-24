@@ -165,7 +165,7 @@ stop({ file: 'app-service/index' });
 
 ```js
 import hmUI from '@zos/ui';
-import { COLOR, TYPOGRAPHY } from '../../utils/constants';
+import { COLOR, DEVICE_WIDTH, TYPOGRAPHY } from '../../utils/constants';
 // import { push, pop } from '@zos/router'; // uncomment when you need navigation
 
 Page({
@@ -181,7 +181,13 @@ Page({
 
   build() {
     // Black OLED background
-    hmUI.createWidget(hmUI.widget.FILL_RECT, { x: 0, y: 0, w: 480, h: 480, color: COLOR.BG });
+    hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 0,
+      w: DEVICE_WIDTH,
+      h: DEVICE_WIDTH,
+      color: COLOR.BG,
+    });
 
     // Title — centered on 480×480 canvas
     hmUI.createWidget(hmUI.widget.TEXT, {

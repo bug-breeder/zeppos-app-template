@@ -21,6 +21,7 @@ export const COLOR = {
   BG: 0x000000, // OLED black — always use as page background
   PRIMARY: 0x30d158, // Green — main actions, progress indicators
   SECONDARY: 0x0a84ff, // Blue — secondary actions, links
+  SECONDARY_PRESSED: 0x0051d5, // pressed state for SECONDARY button
   DANGER: 0xfa5151, // Red — destructive actions, errors
   SUCCESS: 0x34c759, // Lighter green — success/confirmation states
   TEXT: 0xffffff, // White — primary text
