@@ -1,28 +1,25 @@
 /**
- * Home page — the "golden example" of a ZUI-based ZeppOS page.
+ * Home page — the "golden example" of a raw-hmUI ZeppOS page.
  *
  * Copy this file for new pages. Key patterns:
- *   - Import from 'zeppos-zui' for components and theme tokens
+ *   - Use raw hmUI (import hmUI from '@zos/ui') for all layout — explicit { x, y, w, h }
+ *   - Import COLOR and TYPOGRAPHY from '../../utils/constants' for design tokens
  *   - Parse params in onInit with try/catch guard
  *   - Build UI in build() — runs after onInit
- *   - Call pageRoot.mount() to render
- *   - Call pageRoot.destroy() in onDestroy for cleanup
  *   - Reset all module-level state in onInit (vars persist across page visits)
+ *
+ * WHY NOT zeppos-zui?
+ *   ZUI's VStack/CircularLayout calculates child positions before children know
+ *   their own size, so all children render at y=0 (broken on device).
+ *   Raw hmUI with explicit x/y/w/h is reliable and predictable.
  */
 
-import { CircularLayout, VStack, Text, Button, textColors } from 'zeppos-zui';
+import hmUI from '@zos/ui';
+import { COLOR, TYPOGRAPHY } from '../../utils/constants';
 // import { push } from '@zos/router'; // uncomment when you need navigation
-
-// For raw hmUI widgets (non-ZUI), use COLOR / TYPOGRAPHY from '../../utils/constants';
-
-// Module-level state — MUST be reset in onInit (persists across page visits)
-let pageRoot = null;
 
 Page({
   onInit(params) {
-    // Reset module-level state
-    pageRoot = null;
-
     // Parse navigation params — always guard with try/catch
     try {
       const p = params ? JSON.parse(params) : {};
@@ -35,62 +32,64 @@ Page({
   build() {
     console.log('[Home] build');
 
-    pageRoot = new CircularLayout({
-      safeAreaEnabled: true,
-      centerContent: false,
-      edgeMargin: 8,
-      verticalAlignment: 'center',
-      children: [
-        new VStack({
-          spacing: 24,
-          alignment: 'center',
-          children: [
-            // App title
-            new Text({
-              text: 'My App',
-              textStyle: 'largeTitle',
-              fontWeight: 'bold',
-              color: textColors.title,
-              align: 'center',
-            }),
-
-            // Subtitle
-            new Text({
-              text: 'Welcome',
-              textStyle: 'subheadline',
-              color: textColors.subtitle,
-              align: 'center',
-            }),
-
-            // Primary action button
-            new Button({
-              label: 'Get Started',
-              variant: 'primary',
-              size: 'capsule',
-              onPress: () => {
-                console.log('[Home] Get Started pressed');
-                // TODO: Navigate to your next page
-                // push({ url: 'pages/next/index', params: JSON.stringify({ key: 'value' }) });
-              },
-            }),
-          ],
-        }),
-      ],
+    // Black OLED background — zero power draw for black pixels
+    hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 0,
+      w: 480,
+      h: 480,
+      color: COLOR.BG,
     });
 
-    pageRoot.mount();
+    // App title — centered on 480×480 canvas
+    hmUI.createWidget(hmUI.widget.TEXT, {
+      x: 60,
+      y: 162,
+      w: 360,
+      h: 56,
+      text: 'My App',
+      text_size: TYPOGRAPHY.largeTitle,
+      color: COLOR.TEXT,
+      align_h: hmUI.align.CENTER_H,
+    });
+
+    // Subtitle
+    hmUI.createWidget(hmUI.widget.TEXT, {
+      x: 60,
+      y: 226,
+      w: 360,
+      h: 36,
+      text: 'Welcome',
+      text_size: TYPOGRAPHY.subheadline,
+      color: COLOR.TEXT_MUTED,
+      align_h: hmUI.align.CENTER_H,
+    });
+
+    // Primary action button
+    // IMPORTANT: Always use BUTTON with click_func — not FILL_RECT + addEventListener (unreliable)
+    hmUI.createWidget(hmUI.widget.BUTTON, {
+      x: 140,
+      y: 280,
+      w: 200,
+      h: 52,
+      radius: 26,
+      normal_color: COLOR.SECONDARY,
+      press_color: 0x0051d5,
+      text: 'Get Started',
+      text_size: 22,
+      color: COLOR.TEXT,
+      click_func: () => {
+        console.log('[Home] Get Started pressed');
+        // TODO: Navigate to your next page
+        // push({ url: 'pages/next/index', params: JSON.stringify({ key: 'value' }) });
+      },
+    });
   },
 
   onDestroy() {
     console.log('[Home] onDestroy');
-
-    // Destroy ZUI layout tree (releases widget references)
-    if (pageRoot) {
-      pageRoot.destroy();
-      pageRoot = null;
-    }
-
-    // Also clean up if you used:
+    // hmUI widgets are destroyed automatically — no manual cleanup needed
+    // Clean up if you used:
     //   offGesture() — from '@zos/interaction'
     //   offKey()     — from '@zos/interaction'
     //   vibrator.stop() — if Vibrator was started
