@@ -3,7 +3,7 @@
 > **TODO:** Replace `[APP_NAME]`, `[APP_DESCRIPTION]`, and `[APP_ID]` with your app's details.
 
 **App:** [APP_DESCRIPTION — one sentence]
-**App ID:** [APP_ID — replace `10000001` in `app.json`; get a real ID from the Zepp Open Platform]
+**App ID:** [APP_ID — replace `10000001` in `app.json`; get a real ID from the [Zepp Open Platform](https://open.zepp.com/)]
 **Platform:** ZeppOS smartwatches (round OLED, all devices via `common` target)
 **ZeppOS API:** 3.6 compatible / 3.7 target
 
@@ -18,8 +18,6 @@ npm install -g @zeppos/zeus-cli            # ZeppOS build tool (global)
 zeus login                                  # required for device preview
 ```
 
-Get a real App ID: [Zepp Open Platform](https://open.zepp.com/) → replace `10000001` in `app.json`.
-
 ---
 
 ## Platform Constraints
@@ -27,12 +25,12 @@ Get a real App ID: [Zepp Open Platform](https://open.zepp.com/) → replace `100
 **Know these before writing any code:**
 
 - **Runtime:** QuickJS (ES2020 subset) — no DOM, no Node.js, no browser APIs
-- **UI:** Absolute pixel layout — no flexbox, no CSS. All positions are `{ x, y, w, h }` numbers.
-  - Use raw `@zos/ui` (`hmUI`) widgets with explicit `{ x, y, w, h }` — this is the **reliable** approach
-  - `zeppos-zui` (`CircularLayout`, `VStack`, etc.) has a known layout bug: `calculateLayout()` reads child sizes before children know their own dimensions, so **all children render at y=0** (everything overlaps). Avoid ZUI layout containers for page-level UI.
-- **Imports:** All ZeppOS platform APIs are `@zos/*`.
-- **Display:** Round OLED, 480px design canvas. Use `px()` for auto-scaling. **Black background saves battery** — OLED turns off black pixels.
-- **App-services:** Single-shot — `onInit` runs once. Use alarm-chain (`@zos/alarm`) for recurring behavior.
+- **UI:** Use ZeRoUI (`@bug-breeder/zeroui`) for all page layout.
+  - `import { renderPage, column, LAYOUT } from '@bug-breeder/zeroui'`
+  - Raw `@zos/ui` (`hmUI`) only for widgets ZeRoUI doesn't cover (IMG, ARC, SCROLL_LIST, etc.)
+- **Imports:** All ZeppOS platform APIs are `@zos/*`. UI library is `@bug-breeder/zeroui`.
+- **Display:** Round OLED, 480px design canvas. **Black background saves battery** — OLED turns off black pixels.
+- **App-services:** Single-shot — `onInit` runs once, 600ms timeout. Use alarm-chain (`@zos/alarm`) for recurring behavior.
 
 ---
 
@@ -46,7 +44,7 @@ pages/
 app-service/
   index.js              Background service scaffold (alarm-chain pattern)
 utils/
-  constants.js          DEVICE_WIDTH/HEIGHT, COLOR tokens, TYPOGRAPHY
+  constants.js          DEVICE_WIDTH/HEIGHT, supplemental COLOR tokens (for raw hmUI)
   storage.js            LocalStorage wrapper — get(), set(), getKey()
 assets/
   common.r/             Target-specific assets (zeus resolves common + round → common.r)
@@ -85,7 +83,7 @@ assets/
 
 ---
 
-## Top 9 Gotchas
+## Top 7 Gotchas
 
 1. **Widget null check** — always verify a widget reference is non-null before `widget.setProperty(...)`. Silently crashes otherwise.
 
@@ -93,7 +91,7 @@ assets/
 
 3. **Module-level vars persist across page visits** — `let x = 0` at module scope is NOT reset when the user navigates away and returns. Reset ALL state explicitly in `onInit()`.
 
-4. **App-service is single-shot** — `onInit` runs once. For recurring behavior use:
+4. **App-service is single-shot** — `onInit` runs once (600ms timeout). For recurring behavior use:
 
    ```js
    setAlarm({ url: 'app-service/index', delay: 300 }); // from '@zos/alarm'
@@ -101,15 +99,11 @@ assets/
 
    `setInterval` is unreliable in services.
 
-5. **Black background is mandatory** — Use `COLOR.BG` (`0x000000`) on every page. OLED panels consume zero power for black pixels.
+5. **Black background is mandatory** — Use `COLOR.BG` (`0x000000`) from `@bug-breeder/zeroui` on every page. OLED panels consume zero power for black pixels.
 
 6. **Vibrator must be stopped** — Starting a `Vibrator` and navigating away without calling `vibrator.stop()` in `onDestroy` leaves it running indefinitely.
 
 7. **Icon path for common target** — Zeus resolves `targets.common` + `platforms: [{"st":"r"}]` to the target name `common.r`. The app icon must be at `assets/common.r/icon.png` — NOT `assets/icon.png`.
-
-8. **ZUI layout containers are broken** — `zeppos-zui`'s `VStack` / `CircularLayout` computes child positions before children report their own size. Result: every child renders at `y=0` and all elements overlap. **Use raw `hmUI` with explicit `{ x, y, w, h }` for all page layout.** (Standalone ZUI `Button`/`Text` widgets work as direct `hmUI` wrappers; it's the layout containers that fail.)
-
-9. **Touch on `FILL_RECT` is unreliable** — `FILL_RECT.addEventListener(hmUI.event.CLICK_UP, fn)` silently fails on real devices. **Use `hmUI.widget.BUTTON` with `click_func`** for any tappable element — it is the only reliable touch handler. For tappable "cards" with custom styling, use `BUTTON` with `normal_color` / `press_color` parameters.
 
 ---
 
