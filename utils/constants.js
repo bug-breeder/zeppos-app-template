@@ -6,7 +6,8 @@
  * For runtime screen size: import { getDeviceInfo } from '@zos/device-info'
  * and read getDeviceInfo().width / .height — many round devices are 466×466.
  *
- * These constants are for raw @zos/ui (hmUI) layout.
+ * These constants supplement ZeRoUI (@bug-breeder/zeroui) for raw hmUI widgets
+ * not covered by ZeRoUI (IMG, ARC, SCROLL_LIST, etc.).
  */
 
 export const DEVICE_WIDTH = 480;

@@ -1,26 +1,24 @@
 /**
- * Home page — the "golden example" of a raw-hmUI ZeppOS page.
+ * Home page — golden example of a ZeRoUI page.
  *
- * Copy this file for new pages. Key patterns:
- *   - Use raw hmUI (import hmUI from '@zos/ui') for all layout — explicit { x, y, w, h }
- *   - Import COLOR and TYPOGRAPHY from '../../utils/constants' for design tokens
+ * Key patterns:
+ *   - Import from '@bug-breeder/zeroui' for layout, tokens, and components
+ *   - renderPage() handles bg, masks, title, and action button in correct z-order
+ *   - column() + col.finalize() for scrollable content
  *   - Parse params in onInit with try/catch guard
- *   - Build UI in build() — runs after onInit
- *   - Reset all module-level state in onInit (vars persist across page visits)
- *
- * WHY NOT zeppos-zui?
- *   ZUI's VStack/CircularLayout calculates child positions before children know
- *   their own size, so all children render at y=0 (broken on device).
- *   Raw hmUI with explicit x/y/w/h is reliable and predictable.
+ *   - Reset ALL module-level state in onInit (vars persist across page visits)
  */
 
-import hmUI from '@zos/ui';
-import { COLOR, DEVICE_WIDTH, TYPOGRAPHY } from '../../utils/constants';
+import { renderPage, column, LAYOUT } from '@bug-breeder/zeroui';
 // import { push } from '@zos/router'; // uncomment when you need navigation
+
+// Module-level state — MUST reset in onInit (persists across page visits)
+let col = null;
 
 Page({
   onInit(params) {
-    // Parse navigation params — always guard with try/catch
+    col = null;
+
     try {
       const p = params ? JSON.parse(params) : {};
       console.log('[Home] onInit params:', JSON.stringify(p));
@@ -32,66 +30,36 @@ Page({
   build() {
     console.log('[Home] build');
 
-    // Black OLED background — zero power draw for black pixels
-    hmUI.createWidget(hmUI.widget.FILL_RECT, {
-      x: 0,
-      y: 0,
-      w: DEVICE_WIDTH,
-      h: DEVICE_WIDTH,
-      color: COLOR.BG,
-    });
+    col = column(LAYOUT.FULL.MAIN, { scrollable: true });
 
-    // App title — centered on 480×480 canvas
-    hmUI.createWidget(hmUI.widget.TEXT, {
-      x: 60,
-      y: 162,
-      w: 360,
-      h: 56,
-      text: 'My App',
-      text_size: TYPOGRAPHY.largeTitle,
-      color: COLOR.TEXT,
-      align_h: hmUI.align.CENTER_H,
-    });
-
-    // Subtitle
-    hmUI.createWidget(hmUI.widget.TEXT, {
-      x: 60,
-      y: 226,
-      w: 360,
-      h: 36,
-      text: 'Welcome',
-      text_size: TYPOGRAPHY.subheadline,
-      color: COLOR.TEXT_MUTED,
-      align_h: hmUI.align.CENTER_H,
-    });
-
-    // Primary action button
-    // IMPORTANT: Always use BUTTON with click_func — not FILL_RECT + addEventListener (unreliable)
-    hmUI.createWidget(hmUI.widget.BUTTON, {
-      x: 140,
-      y: 280,
-      w: 200,
-      h: 52,
-      radius: 26,
-      normal_color: COLOR.SECONDARY,
-      press_color: COLOR.SECONDARY_PRESSED,
-      text: 'Get Started',
-      text_size: 22,
-      color: COLOR.TEXT,
-      click_func: () => {
-        console.log('[Home] Get Started pressed');
-        // TODO: Navigate to your next page
-        // push({ url: 'pages/next/index', params: JSON.stringify({ key: 'value' }) });
+    renderPage({
+      layout: LAYOUT.FULL,
+      title: 'My App',
+      buildFn() {
+        col.sectionLabel('Welcome');
+        col.chip('Get Started', {
+          onPress: () => {
+            console.log('[Home] Get Started pressed');
+            // push({ url: 'pages/next/index', params: JSON.stringify({ key: 'value' }) });
+          },
+        });
+        col.finalize();
+      },
+      action: {
+        text: 'Start',
+        onPress: () => {
+          console.log('[Home] action pressed');
+        },
       },
     });
   },
 
   onDestroy() {
     console.log('[Home] onDestroy');
-    // hmUI widgets are destroyed automatically — no manual cleanup needed
-    // Clean up if you used:
-    //   offGesture() — from '@zos/interaction'
-    //   offKey()     — from '@zos/interaction'
-    //   vibrator.stop() — if Vibrator was started
+    if (col) {
+      col.destroyAll();
+      col = null;
+    }
+    // offGesture(); offKey(); vibrator.stop(); — if used
   },
 });
