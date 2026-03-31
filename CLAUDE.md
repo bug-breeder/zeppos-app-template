@@ -22,7 +22,7 @@ In Claude Code: `/plugin marketplace add bug-breeder/zepphyr` then `/plugin inst
 
 ## Platform — Non-Negotiables
 
-- **ZeRoUI required** — `import { renderPage, column, LAYOUT } from '@bug-breeder/zeroui'` for all page layout
+- **ZeRoUI required** — `import { renderPage, LAYOUT } from '@bug-breeder/zeroui'` for all page layout
 - **Black background** — use `COLOR.BG` (`0x000000`) on every page; OLED turns off black pixels
 - **QuickJS runtime** — ES2020 subset; no DOM, no Node.js, no browser APIs
 
